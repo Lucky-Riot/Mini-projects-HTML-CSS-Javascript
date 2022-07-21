@@ -1,0 +1,249 @@
+<?php	
+	session_start();
+	require_once 'log.php';
+	
+	$test = "p_name0";
+	
+	
+	if(isset($_POST['submit']))
+	{
+		$id_cours=htmlspecialchars($_POST['coursversobj']);
+	}
+	
+
+	$request="SELECT nom_du_cours from Cours WHERE id='$id_cours'";
+	$result=mysqli_query($lien,$request);
+	$nom_cours=mysqli_fetch_assoc($result);
+	$nom_cours=$nom_cours['nom_du_cours'];
+?>
+
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <title>Alignement pédagogique</title>
+        <link rel="stylesheet" href="css/normalize.csfs" />
+        <link rel="preconnect" href="https://fonts.gstatic.com" />
+        <link
+            href="https://fonts.googleapis.com/css2?family=Cabin&display=swap"
+            rel="stylesheet"
+        />
+        <link rel="preconnect" href="https://fonts.gstatic.com" />
+        <link
+            href="https://fonts.googleapis.com/css2?family=Cabin&family=Fira+Code&display=swap"
+            rel="stylesheet"
+        />
+        <link rel="stylesheet" href="css/main.css" />
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+        <script src="js/tree.js"></script>
+		<script>
+			function myAjax(input){
+				$.ajax({
+				   type: "POST",
+				   url: 'entreealipeda.php',
+				   data:{json: JSON.stringify(input) },
+				   success:function(res) {//res est ce que tu echo dans le php annexe, utile surtout pour le debug si tu fait une alert
+					 //alert(res);
+				   }
+			  });
+			}
+			function enregistrer(texte){
+				var Id = texte.parentNode.previousElementSibling.id;
+				let InputValue = document.getElementById(Id).value;
+				alert(Id);
+				myAjax(texte);
+				if (Id =="p_nameO"){
+					envoyerObj(InputValue);	
+				}
+				if (Id =="p_nameSO"){
+					envoyerssobj(InputValue);	
+				}
+				if (Id =="p_nameAct"){
+					envoyeract(InputValue);	
+				}
+				if (Id =="p_nameEval"){
+					envoyereval(InputValue);	
+				}
+				//myAjax(InputValue);
+				//const newId = Id.substr(-1);
+				//alert(newId);
+				//const replaced = str.slice(0, -1) + newId++;
+				//alert(replaced);
+			}
+			
+			function envoyerObj(texte){
+				myAjax(texte);
+				alert("eeee");
+			}
+			
+			function envoyerssobj(texte){
+				myAjax(texte);
+			}
+			
+			function envoyeract(texte){
+				myAjax(texte);
+			}
+			
+			function envoyereval(texte){
+				myAjax(texte);
+			}
+			/*
+				let InputValue = document.getElementById("p_name").value;
+				alert(InputValue);
+				let input="coucou";
+				var Divprincipale = document.getElementById("liste_principale");
+				var Input = document.getElementById("p_name");
+				Element.removeAttribute(Input);
+				const newItem = document.createElement('span');
+				newItem.setAttribute("id", "saved");
+				newItem.innerHTML=input;
+				Divprincipale.insertAdjacentHTML("afterbegin", input);
+				Input.removeAttribute();
+				
+				alert("hello fuckers !");
+				var Divprincipale = document.getElementById("liste_principale");
+				var Input = document.getElementById("p_name");
+				var InputValue = document.getElementById("p_name").value;
+				Input.removeAttribute();
+				const newItem = document.createElement('span');
+				newItem.setAttribute("id", "saved");
+				newItem.innerHTML=input;
+				
+				Divprincipale.insertAdjacentHTML("afterbegin", html);*/
+		</script>
+		
+    </head>
+
+    <body>
+        <header>
+            <div class="wrapper">
+                <h1 class="app-title">Etablir l'alignement pédagogique de<?php echo " $nom_cours"; ?></h1>
+            </div>
+        </header>
+
+        <main>
+            <div class="wrapper">
+                <div class="main-ctn">
+                    <div>
+                        <h2 class="app-subtitle">Input</h2>
+
+                        <?php
+							echo "$nom_cours";
+						?>
+
+                        <ul id="tree" class="tree"></ul>
+                    </div>
+
+                    <hr />
+
+                    <div>
+                        <h2 class="app-subtitle">Output</h2>
+
+                        <div class="output-tree-ctn">
+                            <pre id="out"></pre>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+
+        <div class="hidden" id="templateobj">
+            <ul id="obj">
+                <li id="liste_principale" class="tree-node">
+                    <input id="p_nameO" placeholder="Objectif" />
+                    <span id="span" class="controls">
+                        &raquo;
+                        <a class="btn-link" href="#" data-func="add-siblingobj"
+                            >+ajouter objectif</a
+                        >
+                        |
+                        <a class="btn-link" href="#" data-func="add-childssobj"
+                            >+ajouter sous-objectif</a
+                        >
+                        |
+                        <a class="btn-link" href="#" data-func="delete"
+                            >delete</a
+                        >
+						|
+						<a id="a" class="btn-link" href="#" onclick="enregistrer(this)"
+                            >save</a
+                        >
+                    </span>
+                </li>
+            </ul>
+        </div>
+		<div class="hidden" id="templatessobj">
+			<ul id="ssobj">
+                <li id="liste_principale" class="tree-node">
+                    <input id="p_nameSO" placeholder="Sous-objectif" />
+                    <span id="span" class="controls">
+                        &raquo;
+                        <a class="btn-link" href="#" data-func="add-siblingssobj"
+                            >+ajouter sous-objectif</a
+                        >
+                        |
+                        <a class="btn-link" href="#" data-func="add-childact"
+                            >+ajouter activité</a
+                        >
+                        |
+                        <a class="btn-link" href="#" data-func="delete"
+                            >delete</a
+                        >
+						|
+						<a id="a" class="btn-link" href="#" onclick="enregistrer(this)"
+                            >save</a
+                        >
+                    </span>
+                </li>
+            </ul>
+		</div>
+		<div class="hidden" id="templateact">
+			<ul id="act">
+                <li id="liste_principale" class="tree-node">
+                    <input id="p_nameAct" placeholder="Activité" />
+                    <span id="span" class="controls">
+                        &raquo;
+                        <a class="btn-link" href="#" data-func="add-siblingact"
+                            >+ajouter activité</a
+                        >
+                        |
+                        <a class="btn-link" href="#" data-func="add-childeval"
+                            >+ajouter évaluation</a
+                        >
+                        |
+                        <a class="btn-link" href="#" data-func="delete"
+                            >delete</a
+                        >
+						|
+						<a id="a" class="btn-link" href="#" onclick="enregistrer(this)"
+                            >save</a
+                        >
+                    </span>
+                </li>
+            </ul>
+		</div>
+		<div class="hidden" id="templateeval">
+			<ul id="eval">
+                <li id="liste_principale" class="tree-node">
+                    <input id="p_nameEval" placeholder="Evaluation" />
+                    <span id="span" class="controls">
+                        &raquo;
+                        <a class="btn-link" href="#" data-func="add-siblingeval"
+                            >+ajouter évaluation</a
+                        >
+                        |
+                        <a class="btn-link" href="#" data-func="delete"
+                            >delete</a
+                        >
+						|
+						<a id="a" class="btn-link" href="#" onclick="enregistrer(this)"
+                            >save</a
+                        >
+                    </span>
+                </li>
+            </ul>
+		</div>
+		
+		<button  onclick="FinalTree()">Enregistrer</button>
+    </body>
+</html>
